@@ -9,7 +9,7 @@
 
     require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
-    const importQueue = ['0epOFNiUfyON9EYx7Tpr6V']
+    const importQueue = ['3Bnq7jiU506HcPjRgQ43TM']
     const importedList = []
     const addedList = []
 

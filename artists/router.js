@@ -19,6 +19,15 @@ router.get('/', async function (req, res, next) {
     res.send(artistsList)
 });
 
+router.get('/search', async function (req, res, next) {
+    if (!req.query.str)
+        res.send([])
+
+    const result = await artists.searchArtists(req.query.str);
+
+    res.send(result)
+});
+
 router.get('/:id', async function (req, res, next) {
     const params = {
         id: req.params.id,

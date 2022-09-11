@@ -8,13 +8,19 @@ const logger = require('morgan');
 const artistsRouter = require('./artists/router');
 const networkRouter = require('./network/router');
 
+app.set('view engine', 'ejs')
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(__dirname + '/public'));
 app.use('/artists', artistsRouter);
 app.use('/network', networkRouter);
+
+
+app.get('/', async (req, res) => {
+    res.render('index')
+})
 
 module.exports = app;
 

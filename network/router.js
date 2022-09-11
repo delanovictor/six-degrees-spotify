@@ -5,7 +5,8 @@ const router = express.Router();
 router.get('/', async function (req, res, next) {
     const params = {
         start: req.query.start,
-        end: req.query.end
+        end: req.query.end,
+        remix: req.query.remix
     }
 
     if (!params.start || !params.end) {

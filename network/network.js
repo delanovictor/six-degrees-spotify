@@ -1,17 +1,21 @@
 const database = require('../services/db')
 const neo4j = require('neo4j-driver')
 
-async function getPath({ start, end, maxLength }) {
+async function getPath({ start, end, maxLength, remix = false }) {
     const session = database.getConnection()
     const path = []
 
-    const query = `MATCH p = shortestPath((:Person{id:$start})-[:PERFORMED*]-(:Person{id:$end}))
-                   RETURN  p`
+    const query = `MATCH p= shortestPath((n:Artist)-[:PERFORMED*]-(m:Artist)) 
+                  WHERE 
+                       n.id = $start and 
+                       m.id = $end
+                       ${remix ? '' : `AND NONE(n in nodes(p) WHERE EXISTS(n.name) AND n.name =~ "(?i).*" + "remix" + ".*" AND 'Track' in LABELS(n)) `}
+                  RETURN p`
 
     const readResult = await session.executeRead(tx =>
         tx.run(query, { start: start, end: end })
     );
-
+    console.log(readResult)
     await session.close();
 
     if (readResult.records.length == 0)

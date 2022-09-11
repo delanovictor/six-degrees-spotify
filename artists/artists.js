@@ -1,10 +1,40 @@
 const database = require('../services/db')
 const neo4j = require('neo4j-driver')
 
+
+async function searchArtists(searchString) {
+    const session = database.getConnection()
+    const result = []
+
+    const query = `MATCH(n: Artist)
+                   WHERE n.name =~ "(?i).*" + $search + ".*"
+                   RETURN n`
+
+    const readResult = await session.executeRead(tx =>
+        tx.run(query, { search: searchString })
+    );
+
+    await session.close();
+    console.log('search')
+    console.log(readResult.summary.query)
+    // console.log(readResult.summary.counters)
+
+
+    readResult.records.forEach(record => {
+        if (record && record._fields) {
+            result.push(record._fields[0].properties)
+        }
+    })
+
+    console.log(result)
+
+    return result
+}
+
 async function getArtist({ id, name }) {
     const session = database.getConnection()
 
-    const query = `MATCH (a:Person{id:$id})
+    const query = `MATCH (a:Artist{id:$id})
                    RETURN (a)`
 
     const readResult = await session.executeRead(tx =>
@@ -27,7 +57,7 @@ async function listArtists({ limit = 100, offset = 0 }) {
     const session = database.getConnection()
     const artistList = []
 
-    const query = `MATCH (a:Person)
+    const query = `MATCH (a:Artist)
                    RETURN a
                    ORDER BY (a.name)
                    SKIP $offset
@@ -54,5 +84,6 @@ async function listArtists({ limit = 100, offset = 0 }) {
 
 module.exports = {
     getArtist: getArtist,
-    listArtists: listArtists
+    listArtists: listArtists,
+    searchArtists: searchArtists
 }
