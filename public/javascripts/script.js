@@ -45,6 +45,51 @@
             console.log(resultText)
 
             resultContainer.html(resultText)
+
+            const graphDataset = {
+                nodes: [],
+                links: []
+            }
+
+            //Populate Nodes
+            path.forEach((node, index) => {
+                graphDataset.nodes.push({
+                    index: index,
+                    id: node.id,
+                    name: node.name,
+                    image: node.image,
+                    type: node.albumId ? 'track' : 'artist',
+                    runtime: 20,
+                    category: 1,
+                    label: 'A',
+                    group: 'B'
+                })
+            })
+
+            //Populate Links
+            graphDataset.nodes.forEach((node, index) => {
+                if (node.type == 'track')
+                    return
+
+                if (index < graphDataset.nodes.length - 1)
+                    graphDataset.links.push({
+                        source: node.id,
+                        target: graphDataset.nodes[index + 1].id,
+                        type: 'Played -->'
+                    })
+
+                if (index > 0)
+                    graphDataset.links.push({
+                        source: graphDataset.nodes[index - 1].id,
+                        target: node.id,
+                        type: '<-- Played'
+                    })
+            })
+
+
+            console.log(graphDataset)
+
+            buildGraph(graphDataset)
         })
 
 

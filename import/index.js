@@ -9,16 +9,24 @@
 
     require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
-    const importQueue = ['3Bnq7jiU506HcPjRgQ43TM']
+    const importQueue = ['4tZwfgrHOc3mvqYlEYSvVi']
     const importedList = []
     const addedList = []
 
     try {
-
+        let index = 0
         while (importQueue.length > 0) {
             console.log(`Queue Size ${importQueue.length}`)
 
-            const id = importQueue.shift()
+            let id = null
+
+            if (index % 4 == 0 && index > 0) {
+                console.log('pegou aletório')
+                id = importQueue.splice(Math.floor(Math.random() * importQueue.length), 1);
+            } else {
+                console.log('pegou da fila')
+                id = importQueue.shift()
+            }
 
             if (id) {
                 const newIds = await importArtist(id)
@@ -46,6 +54,16 @@
                 console.log(`Added to queue ${toImport.length} items`)
                 console.log(``)
             }
+
+            index++
+
+            if (index % 10 == 0) {
+                await fs.writeFile('./log.json', JSON.stringify({
+                    importQueue: importQueue,
+                    importedList: importedList,
+                    addedList: addedList
+                }))
+            }
         }
 
     } catch (error) {
@@ -60,11 +78,7 @@
         }))
     }
 
-    await fs.writeFile('./log.json', JSON.stringify({
-        importQueue: importQueue,
-        importedList: importedList,
-        addedList: addedList
-    }))
+
 
     async function importArtist(id) {
         const session = database.getConnection()
@@ -74,6 +88,7 @@
         console.time(`Import Data: `);
         const inputData = await getImportData(id)
         console.timeEnd(`Import Data: `);
+        // console.log(inputData)
 
         if (!inputData)
             return []
@@ -88,7 +103,7 @@
                             id: value.id
                         })
                         SET a1.name = value.name, a1.image = value.image, 
-                            a1.link = value.link
+                            a1.link = value.link, a1.followers = value.followers, a1.compilation = value.compilation
         `
         const writeResult1 = await session.executeWrite(tx =>
             tx.run(createArtistQuery, { inputData: inputData.artist })

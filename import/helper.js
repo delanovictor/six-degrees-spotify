@@ -2,6 +2,7 @@ const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const axios = require('axios')
 const _ = require('lodash/array')
+const genericSpotifyId = '0LyfQWJT6nXafLPZqxe9Of'
 
 async function getToken() {
     const response = await axios({
@@ -87,7 +88,8 @@ async function getArtist(params) {
             id: artistData.id,
             name: artistData.name,
             image: artistData.images[0]?.url,
-            link: artistData.external_urls.spotify
+            link: artistData.external_urls.spotify,
+            followers: artistData.followers.total
         }
 
         return params
@@ -153,7 +155,8 @@ async function getArtistAlbums(params) {
                     id: albumItem.id,
                     name: albumItem.name,
                     image: albumItem.images[0]?.url,
-                    link: albumItem.external_urls.spotify
+                    link: albumItem.external_urls.spotify,
+                    artists: albumItem.artists
                 }
 
                 albumItemMapped.tracks = albumItem.tracks.items.map(trackItem => {
@@ -163,6 +166,7 @@ async function getArtistAlbums(params) {
                         link: trackItem.external_urls.spotify,
                         image: albumItem.images[0]?.url,
                         preview: trackItem.preview_url,
+                        durationMS: trackItem.duration_ms,
                         artists: trackItem.artists.map(artistItem => {
                             return {
                                 id: artistItem.id,
@@ -250,9 +254,38 @@ async function getImportData(id) {
 
         for (const album of params.artistAlbums) {
             const albumTracks = []
+            let isCompilationAlbum = false;
+
+            if (album.artists.some(_artist => _artist.id == genericSpotifyId)) {
+                isCompilationAlbum = true
+
+                if (album.name.toLowerCase().indexOf(' cover') > -1) {
+                    continue
+                }
+            }
+
+
             album.tracks.forEach(trackItem => {
 
                 if (params.collabsOnly) {
+
+                    if (isCompilationAlbum) {
+                        const durationMinutes = trackItem.durationMS / 60000
+                        if (durationMinutes > 15) {
+                            console.log(durationMinutes)
+                            console.log(trackItem.id)
+                            console.log(trackItem.name)
+                            console.log('musica longa  em um album de compilação, possívelmente uma musica compilada com vários artistas')
+                            return
+                        }
+
+                        if (trackItem.artists.some(_artist => _artist.id == genericSpotifyId)) {
+                            console.log('"various artists" em uma música em um album compilado, possivelmente uma musica compilada com varios artistas')
+                            return
+                        }
+
+                    }
+
                     if (trackItem.artists.length == 1)
                         return;
 
@@ -280,6 +313,7 @@ async function getImportData(id) {
                 }
 
                 trackItem.albumId = album.id
+                trackItem.compilation = isCompilationAlbum
 
                 albumTracks.push(trackItem)
             })

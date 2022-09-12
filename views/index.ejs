@@ -7,12 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.1.js"
-        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 
     <style>
-        /* The search field */
+        .node {
+            fill: #ccc;
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+
+        /*add css for links*/
+
+        .link {
+            stroke: #777;
+            stroke-width: 2px;
+        }
     </style>
     <!-- <link rel="stylesheet" type="text/css" href="stylesheets/style.css" /> -->
 </head>
@@ -74,7 +82,14 @@
         </div>
     </div>
 
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.js"
+        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="./javascripts/script.js"></script>
+    <script src="./javascripts/graph.js"></script>
+
 </body>
 
 </html>
