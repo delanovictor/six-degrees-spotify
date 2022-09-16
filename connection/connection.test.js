@@ -1,6 +1,6 @@
-const network = require('./network')
+const connection = require('./connection')
 
-describe("Network", () => {
+describe("Connection", () => {
 
     it("GetPathBetweenNodes - Should Return an Array of Nodes", async () => {
         const params = {
@@ -9,7 +9,7 @@ describe("Network", () => {
             maxLength: 6
         }
 
-        const nodes = await network.getPath(params)
+        const nodes = await connection.getPath(params)
 
         expect(nodes).toEqual(
             expect.arrayContaining([
@@ -29,7 +29,7 @@ describe("Network", () => {
             maxLength: 1
         }
 
-        const nodes = await network.getPath(params)
+        const nodes = await connection.getPath(params)
 
         expect(nodes).toBeNull()
     })

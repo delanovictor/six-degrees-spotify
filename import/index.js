@@ -9,12 +9,13 @@
 
     require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
-    const importQueue = ['4tZwfgrHOc3mvqYlEYSvVi']
+    const importQueue = ['6kACVPfCOnqzgfEF5ryl0x']
     const importedList = []
     const addedList = []
 
     try {
         let index = 0
+
         while (importQueue.length > 0) {
             console.log(`Queue Size ${importQueue.length}`)
 

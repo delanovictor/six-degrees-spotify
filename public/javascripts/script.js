@@ -20,12 +20,12 @@
             const artistA = artistASelect.find(":selected").val()
             const artistB = artistBSelect.find(":selected").val()
 
-            console.log('http://localhost:3000/network?' + new URLSearchParams({
+            console.log('http://localhost:3000/connection?' + new URLSearchParams({
                 start: artistA,
                 end: artistB,
             }))
 
-            const response = await fetch('http://localhost:3000/network?' + new URLSearchParams({
+            const response = await fetch('http://localhost:3000/connection?' + new URLSearchParams({
                 start: artistA,
                 end: artistB,
             }))

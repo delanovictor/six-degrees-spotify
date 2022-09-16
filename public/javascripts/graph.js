@@ -27,8 +27,8 @@ function buildGraph(dataset) {
 
 
     const margin = ({ top: 30, right: 80, bottom: 30, left: 30 });
-    const width = "100%"
-    const height = "100%"
+    const width = $('#result').width()
+    const height = "1024"
 
     const svg = d3.select('#result')
         .append("svg")
@@ -65,7 +65,7 @@ function buildGraph(dataset) {
         .style('stroke', 'none');
 
     svg.append("text")
-        .text("Robot Components")
+        // .text("Robot Components")
         .attr("text-anchor", "middle")
         .attr("x", width / 2)
         .style("font-size", "20px")
@@ -108,7 +108,7 @@ function buildGraph(dataset) {
             .id(d => d.id)
             .distance(150)
         )
-        .force("charge", d3.forceManyBody().strength(-1000)) // This adds repulsion (if it's negative) between nodes.
+        .force("charge", d3.forceManyBody().strength(-3000)) // This adds repulsion (if it's negative) between nodes.
         // .force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
         .force('y', d3.forceY().y(function (d) {
             return yCenter[d.category]
@@ -133,7 +133,7 @@ function buildGraph(dataset) {
         .style("stroke", "grey")
         .style("stroke-opacity", 0.3)
         .style("stroke-width", d => d.runtime / 10)
-        .style("fill", d => 'red')
+        .style("fill", d => d.type == 'artist' ? 'red' : 'blue')
 
 
     node.append("image")
@@ -144,8 +144,8 @@ function buildGraph(dataset) {
         .attr('href', d => d.image ? d.image : '');
 
     node.append("text")
-        .attr('x', 5)
-        .attr('y', 115)
+        .attr('x', 1)
+        .attr('y', 75)
         .text(d => d.name);
 
 

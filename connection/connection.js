@@ -9,6 +9,8 @@ async function getPath({ start, end, maxLength, remix = false }) {
                   WHERE 
                        n.id = $start and 
                        m.id = $end
+                       //and NONE(x IN NODES(p) WHERE x:Artist AND x.name IN ["Luísa Sonza"] )
+                       //and NONE(y IN NODES(p) WHERE y:Track AND y.id IN ["77xqyOo9JhgDkndyLVWxgK"] )
                        ${remix ? '' : `AND NONE(n in nodes(p) WHERE EXISTS(n.name) AND n.name =~ "(?i).*" + "remix" + ".*" AND 'Track' in LABELS(n)) `}
                   RETURN p`
 
@@ -26,11 +28,23 @@ async function getPath({ start, end, maxLength, remix = false }) {
 
         if (pathFound) {
             pathFound.segments.forEach((seg, index) => {
-                path.push(seg.start.properties)
+                const type = index % 2 == 0 ? 'artist' : 'track'
 
-                if (index == pathFound.segments.length - 1)
-                    path.push(seg.end.properties)
+                let props = {
+                    ...seg.start.properties,
+                    type: type
+                }
 
+                path.push(props)
+
+                if (index == pathFound.segments.length - 1) {
+                    props = {
+                        ...seg.end.properties,
+                        type: 'artist'
+                    }
+
+                    path.push(props)
+                }
             })
         }
     })
