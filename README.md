@@ -6,7 +6,7 @@ An API that uses data collected from the [Spotify API](https://developer.spotify
 
 ## How it works
 
-Two artists are directly connected if both of them collaborated on the same song. However, most of the time this isn't the case, so the quest becomes to find a third artist that collaborated with the first two in separated occasions. <br>If such artist does not exist, this process is repeated, adding connections until a path between the two first artists is found, or it is verified that there is no connection between them. A max number of connection can also be specified. <br>
+Two artists are directly connected if both of them collaborated on the same song. However, most of the time this isn't the case, so the quest becomes to find a third artist that collaborated with the first two in separated occasions. <br> <br> If such artist does not exist, this process is repeated, adding connections until a path between the two first artists is found, or it is verified that there is no connection between them. A max number of connection can also be specified. <br> <br> 
 This search is made possible by using the Spotify Web API data from artists and tracks and importing them to a graph database (Neo4J). 
 
 ---
@@ -60,12 +60,12 @@ Sadly, there is no connection between **Iron Maiden** and **BTS**.
 ## Search Parameters
 | Name | Type | Required / Optional | Description |
 | --- | --- | --- | --- |
-| start | string | required | Spotify ID of the first artist in the network. |
-| end | string | required | Spotify ID of the last artist in the network. |
-| exclude_artist | string | optional | List of artists ID's to exclude from network search. Comma Separated. |
-| exclude_track| string | optional | List of tracks ID's to exclude from network search. Comma Separated. |
-| include_artist | string | optional | List of artists ID's to include in the network search. Comma Separated. |
-| include_track| string | optional | List of tracks ID's to include in the network search. Comma Separated. |
+| start | string | required | Spotify ID of the first artist in the connection. |
+| end | string | required | Spotify ID of the last artist in the connection. |
+| exclude_artist | string | optional | List of artists ID's to exclude from connection search. Comma Separated. |
+| exclude_track| string | optional | List of tracks ID's to exclude from connection search. Comma Separated. |
+| include_artist | string | optional | List of artists ID's to include in the connection search. Comma Separated. |
+| include_track| string | optional | List of tracks ID's to include in the connection search. Comma Separated. |
 | limit | number | optional | Max number of nodes between start and end. |
 
 ## Return 

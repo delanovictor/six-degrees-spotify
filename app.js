@@ -5,22 +5,14 @@ const path = require('path');
 
 const logger = require('morgan');
 
-const artistsRouter = require('./artists/router');
-const connectionRouter = require('./connection/router');
-
-app.set('view engine', 'ejs')
+const artistsRouter = require('./components/artists/router');
+const connectionRouter = require('./components/connection/router');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(__dirname + '/public'));
+
 app.use('/artists', artistsRouter);
 app.use('/connection', connectionRouter);
-
-
-app.get('/', async (req, res) => {
-    res.render('index')
-})
 
 module.exports = app;
 
